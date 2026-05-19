@@ -1891,7 +1891,7 @@
         const overlay = document.createElement("div");
         overlay.id = "userscript-settings-menu";
         overlay.innerHTML = `
-    <div class="settings-container">
+    <div class="settings-container" style="width:900px;height:640px;">
         <button id="close-settings">✖</button>
         <div class="settings-sidebar">
             <h2>Qwet</h2>
@@ -1908,8 +1908,6 @@
                 <li data-section="advanced">🧠 Advanced</li>
                 <li data-section="extras">✨ Extras</li>
                 <li class="section-divider"></li>
-                <li data-section="help">❓ Help</li>
-                <li data-section="about">📘 About</li>
                 <li data-section="technical">🔧 Technical</li>
             </ul>
         </div>
