@@ -31,7 +31,33 @@
 
 
 /*jshint esversion: 6 */
-/*jshint esversion: 11 */
+    function applyAppearanceTheme(theme) {
+        const valid = ['auto', 'oled', 'black', 'white'];
+        if (!valid.includes(theme)) theme = 'auto';
+        const existing = document.getElementById('qwet-theme-style');
+        if (existing) existing.remove();
+        if (theme === 'auto') return;
+        const s = document.createElement('style');
+        s.id = 'qwet-theme-style';
+        let css = '';
+        if (theme === 'oled') {
+            css = `html, body { background:#000 !important; color:#e6e6e6 !important }
+            .settings-container, .settings-sidebar, .settings-content, .rup-content, .rup-main { background:#000 !important; color:#e6e6e6 !important }
+            a { color:#76a9ff !important }`;
+        } else if (theme === 'black') {
+            css = `html, body { background:#0b0b0b !important; color:#ddd !important }
+            .settings-container, .settings-sidebar, .settings-content, .rup-content, .rup-main { background:#0b0b0b !important; color:#ddd !important }
+            a { color:#7fb3ff !important }`;
+        } else if (theme === 'white') {
+            css = `html, body { background:#ffffff !important; color:#111 !important }
+            .settings-container, .settings-sidebar, .settings-content, .rup-content, .rup-main { background:#ffffff !important; color:#111 !important }
+            a { color:#0067cc !important }`;
+        }
+        s.innerHTML = css;
+        document.head.appendChild(s);
+    }
+
+    function exportSettings() {}
 (function() {
     'use strict';
 
