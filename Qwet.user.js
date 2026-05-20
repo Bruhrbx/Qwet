@@ -1140,7 +1140,7 @@
         gamequalityfilter: false, loadbetterprofileinfo: true, disablechat: false,
         smartsearch: true, quicklaunchgames: true, smartjoinpopup: true,
         betterfriends: true, restoreclassicterms: true, betterprivateservers: true,
-        custombackgrounds: false, btrobloxfix: false, mobilemode: false,
+        custombackgrounds: false, btrobloxfix: false,
         joinconfirmation: true, forcedarkmode: false, responsivegamecards: true,
         bettergamestats: false
     };
@@ -1148,7 +1148,6 @@
     // presets in settings
     const presetConfigurations = {
       default: { name: "Default", settings: {} },
-      mobilesettings: { name: "Mobile Settings", settings: {"loadbetterprofileinfo": false, "disablechat": true, "smartjoinpopup": false, "mobilemode": true, "responsivegamecards": false} },
       developerpref: { name: "Dev Settings", settings: {"enableLogs": true, "disablechat": true, "bettergamestats": true} },
       serverfiltersonly: { name: "Server Filters Only", settings: {"removeads": false, "toggleserverhopbutton": false, "ShowOldGreeting": false, "togglerecentserverbutton": false, "disabletrailer": false, "loadbetterprofileinfo": false, "smartsearch": false, "quicklaunchgames": false, "betterfriends": false, "restoreclassicterms": false, "betterprivateservers": false, "responsivegamecards": false} },
       smartsearchonly: { name: "Smart Search Only", settings: {"removeads": false, "togglefilterserversbutton": false, "toggleserverhopbutton": false, "ShowOldGreeting": false, "togglerecentserverbutton": false, "fastservers": false, "disabletrailer": false, "loadbetterprofileinfo": false, "quicklaunchgames": false, "smartjoinpopup": false, "betterfriends": false, "restoreclassicterms": false, "betterprivateservers": false, "joinconfirmation": false, "responsivegamecards": false} },
@@ -1251,10 +1250,6 @@
                         <div class="preset-card" data-preset="default">
                             <h4>🛠️ Default</h4>
                             <p>Default settings that Qwet comes with.</p>
-                        </div>
-                        <div class="preset-card" data-preset="mobilesettings">
-                            <h4>📱 Mobile Settings</h4>
-                            <p>Optimized for Mobile Users.</p>
                         </div>
                         <div class="preset-card" data-preset="developerpref">
                             <h4>👑 Dev Settings</h4>
@@ -1385,17 +1380,6 @@
                 <span class="slider"></span>
                 Fix BTRoblox Compatability
                 <span class="help-icon" data-help="Fix BTRoblox">?</span>
-            </label>
-
-            <label class="toggle-slider new_label">
-                <input type="checkbox" id="mobilemode">
-                <span class="slider"></span>
-                Mobile Mode
-                <a href="https://www.youtube.com/watch?v=gz5SHAro08Q" target="_blank" style="margin-left:8px;color:#4CAF50;text-decoration:underline;cursor:pointer;font-weight:bold;">Video</a>
-                <span class="new">New
-                    <span class="tooltip">Just Released/Updated</span>
-                </span>
-                <a class="help-icon" data-help="Mobile Mode">?</a>
             </label>
 
             <label class="toggle-slider new_label">
@@ -1805,7 +1789,6 @@
                 <li id="help-Enable Server Hop Button"><strong>Enable Server Hop Button:</strong> <span>Enables server hop feature on the game page.</span></li>
                 <li id="help-Enable Notifications"><strong>Enable Notifications:</strong> <span>Enables helpful notifications from the script.</span></li>
                 <li id="help-Fix BTRoblox"><strong>Fix Btroblox Compatability:</strong> <span>Uses alternative methods to make the script compatible with BTRoblox.</span></li>
-                <li id="help-Mobile Mode"><strong>Mobile Mode:</strong> <span>Allows you to join server regions on mobile devices. May work on other devices that prevent direct joining servers like chromebooks.</span></li>
                 <li id="help-Force Dark Mode Styles"><strong>Force Dark Mode Styles:</strong> <span>When enabled, dark mode styles will be used regardless of whether Roblox is in Light or Dark Mode.</span></li>
                 <li id="help-Set Default Location Mode"><strong>Set Default Location Mode:</strong> <span>Enables the user to set a default location for Roblox server regions. Turn this on if the script cannot automatically detect your location.</span></li>
             </ul>
@@ -3143,7 +3126,6 @@ li a.about-link:hover::after {
             ["Enable Server Hop Button", "advanced", "toggleserverhopbutton", "server hop button random server"],
             ["Enable Notifications", "advanced", "enablenotifications", "notification alert"],
             ["Fix BTRoblox Compatability", "advanced", "btrobloxfix", "btroblox fix compatible"],
-            ["Mobile Mode", "advanced", "mobilemode", "mobile mode phone android ios"],
             ["Force Dark Mode Styles", "advanced", "forcedarkmode", "dark mode force theme fix"],
             ["Set Default Location Mode", "advanced", "prioritylocation-select", "location gps coordinates manual automatic"],
             ["Game Quality Filter", "extras", "gamequalityfilter", "game quality filter bad games"],
@@ -13524,15 +13506,6 @@ async function fetchServerDetails(gameId, jobId) { //here!
             Roblox.GameLauncher.joinPrivateGame(placeId, serverId);
             return;
         }
-
-        // mobile mode exception
-        if (localStorage.getItem("QWET_mobilemode") === "true") {
-            window.open(
-                `https://oqarshi.github.io/Invite/?placeid=${placeId}&serverid=${serverId}&mobilemode=true`,
-                "_blank"
-            );
-            return;
-        }
         if (localStorage.getItem("QWET_btrobloxfix") === "true") {
             /* ---------- smartserver join---------- */
             if (localStorage.getItem("QWET_smartjoinpopup") === "true") {
@@ -14302,157 +14275,6 @@ async function fetchServerDetails(gameId, jobId) { //here!
     });
 
     /*******************************************************
-    name of function: mobile stuff #1
-    description: mobile mode thing. if mobile mode true and not in game link then show notification.
-    *******************************************************/
-
-    if (localStorage.QWET_mobilemode === "true" && !location.href.match(/^https:\/\/www\.roblox\.com(\/[a-z]{2})?\/games\//)) {
-        const observer = new MutationObserver(() => {
-            document.querySelectorAll('a[href*="/games/"]').forEach(link => {
-                if (link.dataset.mobileModeAttached) return;
-                link.dataset.mobileModeAttached = "true";
-                link.addEventListener("click", () => notifications('Tap the "Cancel" button', 'info', '❗', '60000'));
-            });
-        });
-        observer.observe(document.body, { childList: true, subtree: true });
-    }
-
-    /*******************************************************
-    name of function: mobile stuff #2
-    description: mobile mode thingy so that servers can show on mobile devices. this is so scuffed lmao
-    *******************************************************/
-    if (localStorage.QWET_mobilemode === "true" && /^https:\/\/www\.roblox\.com(\/[a-z]{2})?\/games\//.test(location.href)) {
-      if (!location.href.includes("#!/game-instances")) {
-        // not yet on game-instance
-        notifications('Mobile Mode is Enabled. Some features may be disabled.', 'info', 'ℹ️', '6000');
-        setTimeout(() => {
-          location.replace(location.href + "#!/game-instances");
-        }, 1000);
-      } else {
-        // after on game-instance
-        notifications('Mobile Mode is Enabled. Some features may be disabled.', 'info', 'ℹ️', '6000');
-      }
-    }
-
-    /*******************************************************
-    name of function: mobile stuff #3
-    description: so like if on roblox.com where says go to app, tell user to not do that
-    *******************************************************/
-    if (localStorage.QWET_mobilemode === "true" && location.href.match(/^https:\/\/www\.roblox\.com\/?$/)) {
-        notifications('Tap "Continue in browser"', 'info', '❗', '30000');
-    }
-
-    /*******************************************************
-    name of function: mobile stuff experimental #5
-    description: so like if on roblox.com where says go to app, tell user to not do that
-    *******************************************************/
-    // Qwet Loading Screen - Run immediately, before page loads
-    if (localStorage.QWET_mobilemode === "true" && location.href.match(/^https:\/\/www\.roblox\.com(\/[a-z]{2})?\/home/)) {
-        // Inject styles immediately in head
-        const style = document.createElement('style');
-        style.textContent = `
-            #qwet-loading-screen {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: #000;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 999999;
-                opacity: 1;
-                transition: opacity 0.6s ease;
-            }
-            #qwet-loading-screen.fade-out {
-                opacity: 0;
-            }
-            .qwet-loading-content {
-                text-align: center;
-            }
-            .qwet-logo-text-container {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 15px;
-                margin-bottom: 15px;
-            }
-            .qwet-logo {
-                width: 50px;
-                height: 50px;
-                border-radius: 8px;
-                transform: translate(10px, -5px);
-                opacity: 0;
-                animation: qwet-logo-fade 0.5s ease-in-out 0.3s forwards;
-            }
-            .qwet-svg {
-                width: 250px;
-                height: auto;
-            }
-            .qwet-text {
-                font-size: 48px;
-                font-weight: 700;
-                font-family: Arial, sans-serif;
-                fill: #cccccc;
-                opacity: 0;
-                animation: qwet-text-fade 0.5s ease-in-out 0.5s forwards;
-            }
-            .qwet-subtitle {
-                font-size: 20px;
-                font-weight: 400;
-                font-family: Arial, sans-serif;
-                color: #888;
-                opacity: 0;
-                margin: 0;
-                animation: qwet-fade-in 0.8s ease-in-out 1.2s forwards;
-            }
-            @keyframes qwet-logo-fade {
-                to {
-                    opacity: 1;
-                }
-            }
-            @keyframes qwet-text-fade {
-                to {
-                    opacity: 1;
-                }
-            }
-            @keyframes qwet-fade-in {
-                to {
-                    opacity: 0.6;
-                }
-            }
-        `;
-        document.head.appendChild(style);
-        // Create loading screen HTML
-        const loadingScreen = document.createElement('div');
-        loadingScreen.id = 'qwet-loading-screen';
-        loadingScreen.innerHTML = `
-            <div class="qwet-loading-content">
-                <div class="qwet-logo-text-container">
-                    <img src="${window.Base64Images.logo}" alt="Qwet Logo" class="qwet-logo">
-                    <svg viewBox="0 0 250 60" class="qwet-svg">
-                        <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" class="qwet-text">
-                            Qwet
-                        </text>
-                    </svg>
-                </div>
-                <p class="qwet-subtitle">For Mobile</p>
-            </div>
-        `;
-        // Add to body immediately
-        document.body.insertBefore(loadingScreen, document.body.firstChild);
-        // Fade out after 3 seconds
-        setTimeout(() => {
-            loadingScreen.classList.add('fade-out');
-            setTimeout(() => {
-                loadingScreen.remove();
-                style.remove();
-            }, 600);
-        }, 3000);
-    }
-
-    /*******************************************************
     The code for the random hop button and the filter button on roblox.com/games/*
     *******************************************************/
         if (
@@ -14522,7 +14344,7 @@ async function fetchServerDetails(gameId, jobId) { //here!
         SmartSearch is on shows a loading overlay and waits 1.5s.
         *******************************************************/
         function InitRobloxLaunchHandler() {
-            if (localStorage.getItem("QWET_btrobloxfix") === "true" || localStorage.getItem("QWET_mobilemode") === "true") {
+            if (localStorage.getItem("QWET_btrobloxfix") === "true") {
                 return;
             }
             if (!/^https:\/\/www\.roblox\.com(\/[a-z]{2})?\/games\//.test(window.location.href)) return;
@@ -19312,8 +19134,7 @@ select:hover, select:focus {
                         serverListContainer.appendChild(serverCard);
 
                         // load real thumbnails in background if not cached and not already being fetched
-                        // added another condition so that finding thumbnails only occurs if mobilemode = false. This is a performance upgrade for mobile users.
-                        if (server.playerTokens && server.playerTokens.length > 0 && !thumbnailCache.has(server.id) && localStorage.QWET_mobilemode === "false") {
+                        if (server.playerTokens && server.playerTokens.length > 0 && !thumbnailCache.has(server.id)) {
                             // mark as being fetched to prevent duplicate requests
                             thumbnailCache.set(server.id, 'loading');
                             fetchPlayerThumbnails(server.playerTokens)

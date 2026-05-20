@@ -1,0 +1,1 @@
+Nothing needs to be added to .gitignore since only a JavaScript user script file (.user.js) was modified, which is a source code file that should not be ignored.
