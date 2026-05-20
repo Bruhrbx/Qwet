@@ -6,7 +6,7 @@
 // @author       Vins
 // @match        https://www.roblox.com/*
 // @license      Custom - Personal Use Only
-// @icon         https://oqarshi.github.io/Invite/qwet/assets/logo.svg
+// @icon         https://github.com/Bruhrbx/Qwet/blob/main/asset/icon.png
 // @supportURL   https://greasyfork.org/en/scripts/523727-qwet/feedback
 // @grant        GM_xmlhttpRequest
 // @grant        GM_getValue
