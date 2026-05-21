@@ -12,7 +12,14 @@
   <img src="https://img.shields.io/badge/Platform-Chromium%20%7C%20Firefox-lightgrey?style=for-the-badge" alt="Platform">
 </p>
 
+
+## 💖 Show Out Untuk Kontributor
+<a href="https://github.com/Bruhrbx/Coffey/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Bruhrbx/Coffey" />
+</a>
+
 ---
+# ☕ Apa Itu Coffey?
 
 **Coffey** adalah ekstensi pemblokir iklan (*ad-blocker*) masa depan yang dirancang sebagai alternatif uBlock yang ultra-cepat, super kecil, dan sepenuhnya *open-source*. Dengan ukuran bundle hanya **1.72 MB**, Coffey berfokus pada efisiensi eksekusi jaringan tanpa membebani memori (RAM) perangkat Anda.
 
