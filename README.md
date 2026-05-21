@@ -1,6 +1,11 @@
 # ☕ Coffey
 
 <p align="center">
+  <img src="https://raw.githubusercontent.com/Bruhrbx/Coffey/refs/heads/main/asset/%E2%98%95%20Coffey.png" alt="Size">
+</p>
+
+
+<p align="center">
   <img src="https://img.shields.io/badge/Size-1.72%20MB-blue?style=for-the-badge&logo=webassembly&logoColor=white" alt="Size">
   <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
   <img src="https://img.shields.io/badge/Status-Beta%20/%20Unstable-orange?style=for-the-badge" alt="Status">
