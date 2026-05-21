@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coffey AdBlocker Settings</title>
+  <style>
+    :root {
+      --bg: #f2f4f8;
+      --surface: #ffffff;
+      --line: #d7dde9;
+      --line-strong: #c4cde0;
+      --text: #1f2f52;
+      --muted: #5d6d95;
+      --accent: #2f66df;
+      --accent-mid: #4d79d2;
+      --danger: #c44747;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 18px;
+    }
+
+    .shell {
+      max-width: 980px;
+      margin: 0 auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px 16px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      background: #e8eefc;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-size: 15px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-btn {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.2;
+      padding: 10px 12px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .content {
+      padding: 18px 20px 24px;
+    }
+
+    .panel[hidden] {
+      display: none;
+    }
+
+    h1 {
+      font-size: 28px;
+      line-height: 1.15;
+      margin-bottom: 10px;
+    }
+
+    .lead {
+      max-width: 860px;
+      font-size: 16px;
+      line-height: 1.45;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(220px, 1fr));
+      gap: 12px;
+    }
+
+    .mode-card {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 14px;
+      cursor: pointer;
+      background: #fbfcff;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .mode-card:hover {
+      border-color: var(--line-strong);
+      background: #f7faff;
+    }
+
+    .mode-card.active {
+      border-color: var(--accent);
+      box-shadow: inset 0 0 0 1px rgba(47, 102, 223, 0.14);
+      background: #f4f8ff;
+    }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .card-radio {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+      pointer-events: none;
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      text-transform: capitalize;
+    }
+
+    .mini-switch {
+      position: relative;
+      height: 20px;
+      margin: 6px 0 12px;
+      background: #e7ebf4;
+      border-radius: 999px;
+    }
+
+    .mini-fill {
+      position: absolute;
+      top: 5px;
+      left: 6px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--accent-mid);
+    }
+
+    .mini-thumb {
+      position: absolute;
+      top: 2px;
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      background: var(--accent);
+    }
+
+    .mini-switch[data-mode="off"] .mini-fill {
+      width: 24%;
+      background: #98a6c7;
+    }
+
+    .mini-switch[data-mode="off"] .mini-thumb {
+      left: 20%;
+      background: #98a6c7;
+    }
+
+    .mini-switch[data-mode="normal"] .mini-fill {
+      width: 54%;
+    }
+
+    .mini-switch[data-mode="normal"] .mini-thumb {
+      left: 49%;
+    }
+
+    .mini-switch[data-mode="optimal"] .mini-fill {
+      width: 86%;
+    }
+
+    .mini-switch[data-mode="optimal"] .mini-thumb {
+      left: 81%;
+    }
+
+    .card-text {
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+
+    .status {
+      margin-top: 14px;
+      font-size: 14px;
+      color: var(--accent);
+      min-height: 22px;
+    }
+
+    .status.error {
+      color: var(--danger);
+    }
+
+    .about {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.55;
+      max-width: 760px;
+    }
+
+    @media (max-width: 860px) {
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">☕</div>
+      <nav class="tabs" aria-label="Tabs">
+        <button type="button" class="tab-btn active" data-tab="settings">Settings</button>
+        <button type="button" class="tab-btn" data-tab="about">About</button>
+      </nav>
+    </header>
+
+    <main class="content">
+      <section class="panel" id="panel-settings">
+        <h1>Default filtering mode</h1>
+        <p class="lead">
+          Atur mode pemfilteran default untuk website. Kamu bisa ganti cepat per kebutuhan:
+          off, normal, atau optimal.
+        </p>
+
+        <div class="cards">
+          <article class="mode-card" data-mode="off">
+            <div class="card-head">
+              <input class="card-radio" type="radio" name="mode" value="off" aria-label="Off">
+              <h2 class="card-title">Off</h2>
+            </div>
+            <div class="mini-switch" data-mode="off">
+              <div class="mini-fill"></div>
+              <div class="mini-thumb"></div>
+            </div>
+            <p class="card-text">
+              Semua pemblokiran dimatikan. Cocok untuk troubleshooting atau whitelist cepat.
+            </p>
+          </article>
+
+          <article class="mode-card" data-mode="normal">
+            <div class="card-head">
+              <input class="card-radio" type="radio" name="mode" value="normal" aria-label="Normal">
+              <h2 class="card-title">Normal</h2>
+            </div>
+            <div class="mini-switch" data-mode="normal">
+              <div class="mini-fill"></div>
+              <div class="mini-thumb"></div>
+            </div>
+            <p class="card-text">
+              Blokir jaringan iklan dari blocklist, tanpa filter elemen HTML tambahan.
+            </p>
+          </article>
+
+          <article class="mode-card" data-mode="optimal">
+            <div class="card-head">
+              <input class="card-radio" type="radio" name="mode" value="optimal" aria-label="Optimal">
+              <h2 class="card-title">Optimal</h2>
+            </div>
+            <div class="mini-switch" data-mode="optimal">
+              <div class="mini-fill"></div>
+              <div class="mini-thumb"></div>
+            </div>
+            <p class="card-text">
+              Proteksi penuh: blokir jaringan dan blokir elemen iklan langsung di halaman.
+            </p>
+          </article>
+        </div>
+
+        <div class="status" id="saveStatus"></div>
+      </section>
+
+      <section class="panel" id="panel-about" hidden>
+        <h1>About</h1>
+        <p class="about">
+          Coffey membantu memblokir request iklan dan menyembunyikan elemen iklan yang
+          mengganggu. Mode dapat diubah kapan saja dari popup atau halaman settings ini.
+        </p>
+      </section>
+    </main>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Coffey AdBlocker</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f6fb;
+      --panel: #ffffff;
+      --line: #dbe2f1;
+      --line-strong: #c7d2eb;
+      --text: #1c2b4d;
+      --muted: #6f7fa9;
+      --accent: #2f66df;
+      --accent-soft: #dbe7ff;
+      --off: #9aa8c7;
+      --danger: #bf3f3f;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 320px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      padding: 12px;
+    }
+
+    .popup {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .site {
+      text-align: center;
+      font-weight: 600;
+      font-size: 19px;
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .hero {
+      padding: 14px 16px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: center;
+    }
+
+    .mode-switch {
+      position: relative;
+      width: 220px;
+      margin: 0 auto;
+      height: 58px;
+    }
+
+    .mode-track {
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      background: #e2e8f6;
+      border: 1px solid var(--line-strong);
+    }
+
+    .mode-track::before {
+      content: "";
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      top: 50%;
+      height: 8px;
+      transform: translateY(-50%);
+      border-radius: 999px;
+      background: #c8d5ef;
+    }
+
+    .mode-thumb {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: #7f90b7;
+      transition: left 0.2s ease, background 0.2s ease;
+      box-shadow: 0 2px 8px rgba(26, 39, 68, 0.25);
+    }
+
+    .mode-switch[data-index="1"] .mode-thumb {
+      left: calc(50% - 21px);
+      background: #4f79d3;
+    }
+
+    .mode-switch[data-index="2"] .mode-thumb {
+      left: calc(100% - 50px);
+      background: var(--accent);
+    }
+
+    .mode-slider {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+      margin: 0;
+    }
+
+    .mode-scale {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+    }
+
+    .mode-step {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: lowercase;
+      cursor: pointer;
+      padding: 2px 0;
+    }
+
+    .mode-step.active {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .popup[data-mode="off"] .mode-step.active {
+      color: var(--danger);
+    }
+
+    .popup[data-mode="normal"] .mode-step.active {
+      color: #4f79d3;
+    }
+
+    .mode-label {
+      margin-top: 10px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .mode-value {
+      margin-top: 2px;
+      font-size: 24px;
+      line-height: 1.1;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: lowercase;
+    }
+
+    .popup[data-mode="off"] .mode-value {
+      color: var(--danger);
+    }
+
+    .popup[data-mode="normal"] .mode-value {
+      color: #4f79d3;
+    }
+
+    .list {
+      padding: 10px 16px 12px;
+    }
+
+    .action-btn {
+      width: 100%;
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid #c8d7fb;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .action-btn:hover {
+      background: #cfe0ff;
+    }
+
+    .action-btn:disabled {
+      color: #9da9c5;
+      background: #eef2fa;
+      border-color: #e0e6f3;
+      cursor: not-allowed;
+    }
+
+    .mode-note {
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+      text-align: left;
+    }
+
+    .stats {
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--muted);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+
+    .stats strong {
+      color: var(--text);
+    }
+
+    .footer {
+      border-top: 1px solid var(--line);
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer.off {
+      color: var(--danger);
+    }
+
+    .reset-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 12px;
+      cursor: pointer;
+      padding: 0;
+      text-decoration: underline;
+    }
+
+    .reset-btn:hover {
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="popup" id="popupRoot" data-mode="optimal">
+    <div class="site" id="siteName">Situs ini</div>
+
+    <section class="hero">
+      <div class="mode-switch" id="modeSwitch" data-index="2">
+        <div class="mode-track">
+          <div class="mode-thumb"></div>
+        </div>
+        <input
+          class="mode-slider"
+          type="range"
+          id="modeSlider"
+          min="0"
+          max="2"
+          step="1"
+          value="2"
+          aria-label="Mode filter"
+        >
+      </div>
+
+      <div class="mode-scale">
+        <button type="button" class="mode-step" data-index="0">off</button>
+        <button type="button" class="mode-step" data-index="1">normal</button>
+        <button type="button" class="mode-step active" data-index="2">optimal</button>
+      </div>
+
+      <div class="mode-label">filtering mode</div>
+      <div class="mode-value" id="modeValue">optimal</div>
+    </section>
+
+    <section class="list">
+      <button type="button" class="action-btn" id="pickElementBtn">
+        Blok elemen iklan di halaman
+      </button>
+
+      <div class="mode-note" id="modeNote">
+        Mode optimal: blokir jaringan + elemen iklan.
+      </div>
+
+      <div class="stats">
+        <span>Total: <strong id="totalBlocked">0</strong></span>
+        <span>Sesi: <strong id="sessionBlocked">0</strong></span>
+      </div>
+    </section>
+
+    <footer class="footer" id="footerStatus">
+      <span id="statusText">Optimal</span>
+      <button type="button" class="reset-btn" id="resetBtn">Reset</button>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
