@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>☕ Coffey — Ad Blocker</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --espresso: #0f0804;
+    --roast:    #1c1008;
+    --bean:     #2e1a0a;
+    --crema:    #c8832a;
+    --gold:     #f0ac4e;
+    --foam:     #f5e8cc;
+    --steam:    rgba(245,232,204,0.07);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--espresso);
+    color: var(--foam);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* Grain overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 9999; opacity: .6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    padding: 1.4rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    background: linear-gradient(to bottom, rgba(15,8,4,.95), transparent);
+    z-index: 100;
+    backdrop-filter: blur(4px);
+  }
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; font-weight: 900;
+    color: var(--crema); letter-spacing: .03em;
+  }
+  .nav-logo span { color: var(--foam); }
+  nav a {
+    color: rgba(245,232,204,.55);
+    text-decoration: none; font-size: .85rem;
+    letter-spacing: .08em; text-transform: uppercase;
+    transition: color .25s;
+  }
+  nav a:hover { color: var(--gold); }
+  .nav-links { display: flex; gap: 2.5rem; }
+  .nav-cta {
+    background: var(--crema);
+    color: var(--espresso) !important;
+    padding: .55rem 1.4rem;
+    border-radius: 3px;
+    font-weight: 500 !important;
+    letter-spacing: .05em !important;
+    transition: background .2s, transform .2s !important;
+  }
+  .nav-cta:hover { background: var(--gold) !important; transform: translateY(-1px); }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: grid; place-items: center;
+    position: relative;
+    padding: 7rem 2rem 4rem;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  /* Radial glow */
+  #hero::after {
+    content: '';
+    position: absolute;
+    width: 700px; height: 700px;
+    background: radial-gradient(ellipse, rgba(200,131,42,.18) 0%, transparent 70%);
+    border-radius: 50%;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  /* Steam lines */
+  .steam-wrap {
+    position: absolute; bottom: 38%;
+    left: 50%; transform: translateX(-50%);
+    display: flex; gap: 14px;
+  }
+  .steam-line {
+    width: 3px;
+    border-radius: 99px;
+    background: linear-gradient(to top, transparent, rgba(245,232,204,.15));
+    animation: steam 3s ease-in-out infinite;
+  }
+  .steam-line:nth-child(1){ height: 80px; animation-delay: 0s; }
+  .steam-line:nth-child(2){ height: 120px; animation-delay: .5s; }
+  .steam-line:nth-child(3){ height: 60px; animation-delay: 1s; }
+
+  @keyframes steam {
+    0%,100% { transform: scaleX(1) translateY(0); opacity: .5; }
+    50%      { transform: scaleX(1.3) translateY(-20px); opacity: .15; }
+  }
+
+  /* Coffee cup SVG area */
+  .cup-icon {
+    font-size: 5rem; line-height: 1;
+    margin-bottom: 1.5rem;
+    display: block;
+    filter: drop-shadow(0 0 40px rgba(200,131,42,.5));
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0); }
+    50%      { transform: translateY(-14px); }
+  }
+
+  .hero-tag {
+    display: inline-block;
+    border: 1px solid rgba(200,131,42,.35);
+    color: var(--crema);
+    font-size: .72rem; letter-spacing: .2em;
+    text-transform: uppercase;
+    padding: .35rem 1.2rem;
+    border-radius: 2px;
+    margin-bottom: 1.8rem;
+    background: rgba(200,131,42,.08);
+    animation: fadeUp .8s ease both;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3.5rem, 9vw, 7rem);
+    font-weight: 900;
+    line-height: .95;
+    letter-spacing: -.02em;
+    color: var(--foam);
+    animation: fadeUp .9s .1s ease both;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--crema);
+  }
+
+  .hero-sub {
+    max-width: 520px; margin: 1.8rem auto 0;
+    font-size: 1.05rem; line-height: 1.7;
+    color: rgba(245,232,204,.55);
+    animation: fadeUp .9s .2s ease both;
+  }
+
+  .hero-actions {
+    display: flex; gap: 1rem; justify-content: center;
+    margin-top: 2.8rem; flex-wrap: wrap;
+    animation: fadeUp .9s .3s ease both;
+  }
+
+  .btn-primary {
+    background: var(--crema);
+    color: var(--espresso);
+    padding: .9rem 2.2rem;
+    border-radius: 3px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .9rem; font-weight: 500;
+    letter-spacing: .06em; text-transform: uppercase;
+    text-decoration: none;
+    transition: background .2s, transform .2s, box-shadow .2s;
+    box-shadow: 0 4px 30px rgba(200,131,42,.35);
+  }
+  .btn-primary:hover {
+    background: var(--gold);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 40px rgba(200,131,42,.5);
+  }
+
+  .btn-ghost {
+    border: 1px solid rgba(245,232,204,.2);
+    color: rgba(245,232,204,.65);
+    padding: .9rem 2.2rem;
+    border-radius: 3px;
+    font-size: .9rem; letter-spacing: .06em; text-transform: uppercase;
+    text-decoration: none;
+    transition: border-color .2s, color .2s;
+  }
+  .btn-ghost:hover {
+    border-color: var(--crema);
+    color: var(--crema);
+  }
+
+  /* Stat bar */
+  .stat-bar {
+    margin-top: 5rem;
+    display: flex; justify-content: center; gap: 0;
+    border-top: 1px solid rgba(245,232,204,.07);
+    border-bottom: 1px solid rgba(245,232,204,.07);
+    animation: fadeUp .9s .4s ease both;
+  }
+  .stat {
+    padding: 1.8rem 3.5rem;
+    text-align: center;
+    border-right: 1px solid rgba(245,232,204,.07);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem; font-weight: 700;
+    color: var(--crema);
+  }
+  .stat-label {
+    font-size: .72rem; letter-spacing: .12em;
+    text-transform: uppercase;
+    color: rgba(245,232,204,.35);
+    margin-top: .3rem;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* FEATURES */
+  #features {
+    padding: 8rem 2rem;
+    max-width: 1100px; margin: 0 auto;
+  }
+
+  .section-header {
+    text-align: center; margin-bottom: 5rem;
+  }
+  .section-tag {
+    color: var(--crema); font-size: .72rem;
+    letter-spacing: .2em; text-transform: uppercase;
+    margin-bottom: 1rem; display: block;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900; line-height: 1.1;
+    color: var(--foam);
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5px;
+    background: rgba(245,232,204,.07);
+    border: 1px solid rgba(245,232,204,.07);
+  }
+
+  .feature-card {
+    background: var(--roast);
+    padding: 2.8rem 2.5rem;
+    transition: background .25s;
+    position: relative; overflow: hidden;
+  }
+  .feature-card::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(200,131,42,.07) 0%, transparent 60%);
+    opacity: 0; transition: opacity .3s;
+  }
+  .feature-card:hover { background: var(--bean); }
+  .feature-card:hover::before { opacity: 1; }
+
+  .feature-icon {
+    font-size: 2rem; margin-bottom: 1.3rem; display: block;
+  }
+  .feature-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem; font-weight: 700;
+    color: var(--foam); margin-bottom: .8rem;
+  }
+  .feature-desc {
+    font-size: .88rem; line-height: 1.75;
+    color: rgba(245,232,204,.45);
+  }
+
+  /* INSTALL */
+  #install {
+    background: var(--roast);
+    border-top: 1px solid rgba(245,232,204,.06);
+    border-bottom: 1px solid rgba(245,232,204,.06);
+    padding: 7rem 2rem;
+  }
+
+  .install-inner {
+    max-width: 900px; margin: 0 auto;
+  }
+
+  .tabs {
+    display: flex; gap: .5rem;
+    margin-bottom: 2.5rem; flex-wrap: wrap;
+  }
+  .tab-btn {
+    background: transparent;
+    border: 1px solid rgba(245,232,204,.12);
+    color: rgba(245,232,204,.4);
+    padding: .65rem 1.6rem;
+    border-radius: 2px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: .85rem; letter-spacing: .06em;
+    cursor: pointer; transition: all .2s;
+  }
+  .tab-btn.active {
+    background: var(--crema); color: var(--espresso);
+    border-color: var(--crema); font-weight: 500;
+  }
+  .tab-btn:hover:not(.active) {
+    border-color: rgba(200,131,42,.4); color: var(--crema);
+  }
+
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .steps {
+    counter-reset: step;
+    display: flex; flex-direction: column; gap: 1.5rem;
+  }
+  .step {
+    display: flex; align-items: flex-start; gap: 1.5rem;
+    padding: 1.5rem 2rem;
+    background: var(--espresso);
+    border: 1px solid rgba(245,232,204,.06);
+    border-radius: 2px;
+    transition: border-color .2s;
+  }
+  .step:hover { border-color: rgba(200,131,42,.25); }
+  .step-num {
+    width: 32px; height: 32px; flex-shrink: 0;
+    border: 1px solid rgba(200,131,42,.4);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-size: .8rem; font-weight: 500;
+    color: var(--crema);
+    counter-increment: step;
+  }
+  .step-text {
+    font-size: .9rem; line-height: 1.65;
+    color: rgba(245,232,204,.55);
+    padding-top: .25rem;
+  }
+  .step-text code {
+    background: rgba(200,131,42,.12);
+    color: var(--gold);
+    padding: .1rem .4rem; border-radius: 3px;
+    font-size: .82rem; font-family: monospace;
+  }
+
+  /* WARNING BADGE */
+  .badge-warn {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: rgba(240,172,78,.08);
+    border: 1px solid rgba(240,172,78,.2);
+    color: var(--gold);
+    padding: .7rem 1.3rem;
+    border-radius: 2px;
+    font-size: .82rem; line-height: 1.6;
+    margin-top: 2rem;
+  }
+
+  /* TECH */
+  #tech {
+    padding: 7rem 2rem;
+    max-width: 900px; margin: 0 auto;
+    text-align: center;
+  }
+
+  .tech-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: rgba(245,232,204,.06);
+    border: 1px solid rgba(245,232,204,.06);
+    margin-top: 4rem;
+  }
+  @media(max-width:600px){ .tech-grid { grid-template-columns: 1fr; } }
+
+  .tech-item {
+    padding: 2.5rem 2rem;
+    background: var(--espresso);
+    text-align: left;
+  }
+  .tech-label {
+    font-size: .7rem; letter-spacing: .18em; text-transform: uppercase;
+    color: rgba(245,232,204,.3); margin-bottom: .8rem;
+  }
+  .tech-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem; color: var(--foam); font-weight: 700;
+  }
+  .tech-desc {
+    font-size: .8rem; color: rgba(245,232,204,.35);
+    margin-top: .4rem; line-height: 1.5;
+  }
+
+  /* CTA */
+  #cta {
+    padding: 8rem 2rem;
+    text-align: center;
+    position: relative; overflow: hidden;
+  }
+  #cta::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(200,131,42,.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  #cta h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    font-weight: 900; line-height: 1.05;
+    margin-bottom: 2.5rem;
+  }
+  #cta h2 em { color: var(--crema); font-style: italic; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid rgba(245,232,204,.07);
+    padding: 2.5rem 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+    font-size: .78rem; color: rgba(245,232,204,.25);
+  }
+  footer a { color: rgba(245,232,204,.35); text-decoration: none; }
+  footer a:hover { color: var(--crema); }
+  .footer-links { display: flex; gap: 2rem; }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  /* Mobile nav */
+  @media(max-width: 700px) {
+    .nav-links { display: none; }
+    .stat-bar { flex-wrap: wrap; }
+    .stat { flex: 1 1 45%; border-right: none; border-bottom: 1px solid rgba(245,232,204,.07); }
+    nav { padding: 1.2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">☕ Coffe<span>y</span></div>
+  <div class="nav-links">
+    <a href="#features">Fitur</a>
+    <a href="#install">Instalasi</a>
+    <a href="#tech">Teknis</a>
+    <a href="https://github.com/Bruhrbx/Coffey" target="_blank" class="nav-cta">GitHub →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div style="position:relative; z-index:1;">
+    <div class="hero-tag">☕ Browser Extension · Open Source · Beta</div>
+    <span class="cup-icon">☕</span>
+    <h1>Block <em>Ads.</em><br>Brew <em>Fast.</em></h1>
+    <p class="hero-sub">
+      Coffey adalah ad-blocker masa depan — ultra-ringan, open-source, dan secepat secangkir espresso. Hanya <strong style="color:var(--crema)">1.72 MB</strong>, tanpa overhead, tanpa kompromi.
+    </p>
+    <div class="hero-actions">
+      <a href="#install" class="btn-primary">Pasang Sekarang</a>
+      <a href="https://github.com/Bruhrbx/Coffey" target="_blank" class="btn-ghost">Lihat Source →</a>
+    </div>
+  </div>
+
+  <div class="steam-wrap" style="z-index:0;">
+    <div class="steam-line"></div>
+    <div class="steam-line"></div>
+    <div class="steam-line"></div>
+  </div>
+
+  <div class="stat-bar reveal" style="width:100%; margin-top:5rem;">
+    <div class="stat">
+      <div class="stat-num">1.72<span style="font-size:1rem"> MB</span></div>
+      <div class="stat-label">Ukuran Bundle</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">~0%</div>
+      <div class="stat-label">CPU Overhead</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">MV3</div>
+      <div class="stat-label">Manifest Version</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">100%</div>
+      <div class="stat-label">Open Source</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-header reveal">
+    <span class="section-tag">Yang Membuat Coffey Beda</span>
+    <h2 class="section-title">Diracik untuk<br><em style="color:var(--crema)">Performa.</em></h2>
+  </div>
+
+  <div class="features-grid reveal">
+    <div class="feature-card">
+      <span class="feature-icon">🚀</span>
+      <div class="feature-name">Ultra Cepat</div>
+      <p class="feature-desc">Pemrosesan aturan pemblokiran langsung di level inti browser. Overhead CPU hampir nol — tanpa skrip background yang boros.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">📦</span>
+      <div class="feature-name">Tiny Size</div>
+      <p class="feature-desc">Hanya 1.72 MB. Salah satu ad-blocker paling ringan yang pernah ada, cocok untuk storage terbatas sekalipun.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🔒</span>
+      <div class="feature-name">Privasi Penuh</div>
+      <p class="feature-desc">Zero data tracking. Zero analitik tersembunyi. Kode 100% transparan dan bisa diaudit oleh siapa saja.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">⚡</span>
+      <div class="feature-name">Efisiensi Energi</div>
+      <p class="feature-desc">Dirancang untuk perangkat low-end dan laptop hemat baterai. Coffey jalan mulus tanpa makan banyak RAM.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🛡️</span>
+      <div class="feature-name">EasyList + Privacy</div>
+      <p class="feature-desc">Terintegrasi dengan EasyList Core dan EasyPrivacy Minimal — memblokir iklan global dan third-party trackers.</p>
+    </div>
+    <div class="feature-card">
+      <span class="feature-icon">🌐</span>
+      <div class="feature-name">Multi-Browser</div>
+      <p class="feature-desc">Jalan di Chromium (Chrome, Brave, Edge, Opera) dan Mozilla Firefox. Satu ekstensi, semua browser.</p>
+    </div>
+  </div>
+</section>
+
+<!-- INSTALL -->
+<section id="install">
+  <div class="install-inner">
+    <div class="section-header reveal">
+      <span class="section-tag">Panduan Instalasi Manual</span>
+      <h2 class="section-title">Pasang <em style="color:var(--crema)">Coffey</em><br>Dalam 5 Menit</h2>
+    </div>
+
+    <div class="tabs reveal">
+      <button class="tab-btn active" onclick="switchTab('chromium', this)">🌐 Chromium / Chrome</button>
+      <button class="tab-btn" onclick="switchTab('firefox', this)">🦊 Firefox</button>
+    </div>
+
+    <div id="tab-chromium" class="tab-panel active reveal">
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">Download repositori: klik <strong>Code → Download ZIP</strong> di GitHub, atau jalankan <code>git clone https://github.com/Bruhrbx/Coffey.git</code></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">Ekstrak file ZIP ke folder khusus di komputermu.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">Buka browser dan kunjungi <code>chrome://extensions/</code></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">Aktifkan <strong>Developer Mode</strong> di pojok kanan atas.</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-text">Klik <strong>Load Unpacked</strong> → pilih folder Coffey yang berisi <code>manifest.json</code></div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-text">Selesai! ☕ Coffey kini aktif dan memblokir iklan di browsermu.</div></div>
+      </div>
+    </div>
+
+    <div id="tab-firefox" class="tab-panel reveal">
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-text">Download dan ekstrak repositori Coffey dari GitHub.</div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-text">Buka Firefox dan ketik <code>about:debugging</code> di address bar, lalu Enter.</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-text">Klik <strong>This Firefox</strong> di menu kiri.</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-text">Klik <strong>Load Temporary Add-on...</strong> → pilih file <code>manifest.json</code></div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-text">Coffey aktif! Untuk instalasi permanen, gunakan Firefox Developer Edition atau Nightly.</div></div>
+      </div>
+    </div>
+
+    <div class="badge-warn reveal">
+      ⚠️ <span>Coffey masih dalam fase <strong>Beta / Unstable</strong>. Mungkin ada bug minor. Laporkan masalah via <a href="https://github.com/Bruhrbx/Coffey/issues" style="color:var(--gold)">GitHub Issues</a>.</span>
+    </div>
+  </div>
+</section>
+
+<!-- TECH -->
+<section id="tech">
+  <div class="section-header reveal">
+    <span class="section-tag">Detail Teknis</span>
+    <h2 class="section-title">Dibangun dengan<br><em style="color:var(--crema)">Arsitektur Modern</em></h2>
+  </div>
+
+  <div class="tech-grid reveal">
+    <div class="tech-item">
+      <div class="tech-label">Standar</div>
+      <div class="tech-val">Manifest V3</div>
+      <div class="tech-desc">Arsitektur terbaru browser modern — lebih aman, lebih efisien, lebih patuh kebijakan.</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-label">Filter Engine</div>
+      <div class="tech-val">DeclarativeNetRequest</div>
+      <div class="tech-desc">Filter bekerja di level native browser, bukan JavaScript — jauh lebih cepat.</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-label">Lisensi</div>
+      <div class="tech-val">GPL-3.0</div>
+      <div class="tech-desc">Bebas digunakan, dimodifikasi, dan didistribusikan — selama menyertakan atribusi asli.</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-label">Filter List</div>
+      <div class="tech-val">EasyList Core</div>
+      <div class="tech-desc">Memblokir banner, pop-up, dan iklan jaringan global secara efektif.</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-label">Privacy Layer</div>
+      <div class="tech-val">EasyPrivacy Minimal</div>
+      <div class="tech-desc">Mencegah third-party trackers mengumpulkan data browsing kamu.</div>
+    </div>
+    <div class="tech-item">
+      <div class="tech-label">Custom Rules</div>
+      <div class="tech-val">Anti-Adblock Bypass</div>
+      <div class="tech-desc">Aturan internal Coffey untuk memangkas elemen iklan tanpa terdeteksi anti-adblock.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <h2 class="reveal">Siap Menikmati<br>Web <em>Tanpa Iklan?</em></h2>
+  <div class="hero-actions reveal">
+    <a href="https://github.com/Bruhrbx/Coffey" target="_blank" class="btn-primary">Download di GitHub</a>
+    <a href="https://github.com/Bruhrbx/Coffey/issues" target="_blank" class="btn-ghost">Laporkan Bug</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>☕ Coffey — dibuat dengan cinta oleh <a href="https://github.com/Bruhrbx" target="_blank">Bruhrbx</a> & kontributor open-source.</div>
+  <div class="footer-links">
+    <a href="https://github.com/Bruhrbx/Coffey" target="_blank">GitHub</a>
+    <a href="https://github.com/Bruhrbx/Coffey/blob/main/LICENSE" target="_blank">Lisensi</a>
+    <a href="https://github.com/Bruhrbx/Coffey/issues" target="_blank">Issues</a>
+  </div>
+</footer>
+
+<script>
+  // Tab switcher
+  function switchTab(id, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
